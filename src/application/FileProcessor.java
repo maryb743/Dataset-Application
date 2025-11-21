@@ -1,7 +1,8 @@
 /**************************************************
  * 
  * 
- * This class provides file reading and writing functionality
+ * This class provides file reading and writing functionality, 
+ * Reads the dataset text file and returns its contents as a 2D String array
  * 
  * Author: Mary Byrne
  * 
@@ -12,116 +13,60 @@
 
 package application;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.Scanner;
+import java.io.*;
+import java.util.ArrayList;
 
-public class FileProcessor 
-{
-	
+public class FileProcessor {
 
-	private String fileName; 
-	private File fileExample;  
-	private Scanner myScanner;
-	private PrintWriter pwInput;
-	
-	// Constructor
-	FileProcessor (String fileName)
-	{
-		
-		this.fileName = fileName;
-		
-	}
-	
-	// get a connection to the file
-	void connectToFile()
-	{
-		fileExample = new File(fileName);
-	}
+	public static String[][] loadDataset(String filename) {
 
+		//temp array list to hold row data
+	    ArrayList<String[]> rows = new ArrayList<>();
+	    
+	    try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+	        String line;
+	        boolean isFirstLine = true;
 
-	// method to read and print out all the lines of the file 
-	void readFileContents()
-    {
-       try
-       {
-    	   	myScanner = new Scanner(fileExample); 
-       
-	       	while (myScanner.hasNextLine()) {
-	       	  System.out.println(myScanner.nextLine());	
-	       	 	
-	       	}
-       }    	
-	  catch(FileNotFoundException e) 
-       {
-		  System.out.println("run time error " + e.getMessage());	
-	   
-       }       
-    }
-    	
-	@SuppressWarnings("finally")
-	
-	// Read the file, returning a string array of lines
-    String[] readFile()
-    {
-    
-    		String[] values = new String[20];
-    	
-	    try
-		{
-		    	int i = 0;
-		    	myScanner = new Scanner(fileExample); 
-				 while (myScanner.hasNextLine())
-				    {
-				      
-					 values[i] = myScanner.nextLine();
-				      i++;
-				    }
-				 myScanner.close();
-		}
-		catch (FileNotFoundException e)
-		{
-			System.out.println("run time error " + e.getMessage());
-		}
-	    finally
-	    {
-	        return values;
+	        //read in file line by line
+	        while ((line = br.readLine()) != null) {
+
+	        	//remove whitespace
+	            line = line.trim();
+	            
+	            //skip blank lines
+	            if (line.isEmpty()) {
+	                continue;
+	            }
+
+	            //skip column headers (first line of dataset)
+	            if (isFirstLine) {
+	                isFirstLine = false; 
+	                continue;
+	            }
+
+	            //split line into columns
+	            String[] fields = line.split("\\s+");
+
+	            //make sure only rows that have 7 columns are added
+	            if (fields.length == 7) {
+	                rows.add(fields);
+	                
+	            } else {
+	            	
+	            	//rows with more or less columns are ignored
+	                System.out.println(" -> BAD LINE, skipping");
+	                
+	            }
+	        }
+
+	    } catch (Exception e) {
+	    	//print any errors 
+	        e.printStackTrace();
+	        
 	    }
-    }
-    
-    
-	// get hold of a Print writer object
-    void getFileWriter()
-    {
-    	try
-    	{
-    		pwInput = new PrintWriter(fileExample);
-    	}
-  		catch (FileNotFoundException e)
-  		{
-  			System.out.println("run time error " + e.getMessage());
-  		}
-    	
-    }	
-
-	// write a string to the file
-    void writeLineToFile(String line)
-    {
-       System.out.println(line);
-  		pwInput.println(line);    	
-    }	
-
-    // close the scanner. Good to have this as a separate method as "closing" is different to readin
-    void closeReadFile()
-    {
-		 myScanner.close();
-    }
-
-    // close the PrintWriter. Good to have this as a separate method as "closing" is different to writing. 
-    void closeWriteFile()
-    {
-		 pwInput.close();
-    }
+	    
+	    //convert temp ArrayList to 2D array for JTable
+	    return rows.toArray(new String[0][]);
+	}
 
 }
