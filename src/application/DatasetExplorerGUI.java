@@ -1,13 +1,11 @@
 /**************************************************
  * 
  * 
- * This class is to create and display a GUI containing a dataset
+ * This class is to create and display a GUI containing a dataset and functional buttons
  * 
  * Author: Mary Byrne
  * 
  * 2025
- * 
- * 
  * 
  * 
  ************************************************************************************/
@@ -28,7 +26,7 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 			JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JPanel inputPanel = new JPanel();
 			JLabel label1, label2, label3,label4,label5,label6,label7;
-			JButton addButton, updateButton, deleteButton;
+			JButton addButton,deleteButton;
 			JTextField stationID, date, temp, humidity, windKPH, precipMM, Condition;
 			
 			//column array
@@ -39,9 +37,6 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 			
 			//loading data from dataset into 2d array
 			String[][] tableData = FileProcessor.loadDataset("dataset.txt");
-			
-			//create table using columns and data
-	        JTable datasetTable = new JTable(tableData, columns);
 			
 	        public DatasetExplorerGUI() {
 
@@ -54,21 +49,13 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	            //create the default table model
 	            DefaultTableModel model = new DefaultTableModel(tableData, columns);
 	            JTable datasetTable = new JTable(model);
+//	            datasetTable.setBackground(Color.darkGray);
+//	            datasetTable.setForeground(Color.pink);
 
 	            //add, update and delete row buttons
 	            addButton = new JButton("Add");
-	            updateButton = new JButton("Update");
 	            deleteButton = new JButton("Delete");
-	            
-	            //labels
-	            label1 = new JLabel("Station ID");
-	            label2 = new JLabel("Date");
-	            label3 = new JLabel("Temp (Celcius)");
-	            label4 = new JLabel("Humidity %");
-	            label5 = new JLabel("Wind (KPH)");
-	            label6 = new JLabel("Precipitation (MM)");
-	            label7 = new JLabel("Condition");
-	            
+
 	            //text fields for entering data
 	            stationID = new JTextField();
 	            date = new JTextField();
@@ -80,12 +67,54 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	            
 	            //action listener for add row button
 	            addButton.addActionListener(e -> {
-	            	
-	                System.out.println("Row added");
-	                model.addRow(new String[columns.length]);
+
+	                //read values from text fields
+	                String[] newRow = {
+	                    stationID.getText().trim(),
+	                    date.getText().trim(),
+	                    temp.getText().trim(),
+	                    humidity.getText().trim(),
+	                    windKPH.getText().trim(),
+	                    precipMM.getText().trim(),
+	                    Condition.getText().trim()
+	                };
+
 	                
+	                boolean inputEmpty = true;
+	               //if no text is entered set the row as empty
+	                for (String s : newRow) {
+	                	
+	                    if (!s.isEmpty()) {
+	                    	
+	                    	inputEmpty = false;
+	                        break;
+	                        
+	                    }
+	                    
+	                }
+
+	               
+	                if (inputEmpty) {
+	                	//if empty add blank row
+	                    model.addRow(new Object[columns.length]);  
+	                    
+	                } else {
+	                	//else add data to table
+	                    model.addRow(newRow);                       
+	                }
+
+	                //reset textboxes to blank after data is added
+	                stationID.setText("");
+	                date.setText("");
+	                temp.setText("");
+	                humidity.setText("");
+	                windKPH.setText("");
+	                precipMM.setText("");
+	                Condition.setText("");
+
 	            });
 
+	            //adding labels and text boxes to panel
 	            inputPanel.add(createInputRow("Station ID", stationID));
 	            inputPanel.add(createInputRow("Date", date));
 	            inputPanel.add(createInputRow("Temp (Celsius)", temp));
@@ -96,7 +125,6 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	            
 	            //button panel
 	            buttonPanel.add(addButton);
-	            buttonPanel.add(updateButton);
 	            buttonPanel.add(deleteButton);
 	           
 	            

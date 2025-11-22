@@ -53,8 +53,8 @@ public class FileProcessor {
 	                
 	            } else {
 	            	
-	            	//rows with more or less columns are ignored
-	                System.out.println(" -> BAD LINE, skipping");
+	            	//error checking
+	            	//ignore rows with more or less than 7 columns
 	                
 	            }
 	        }

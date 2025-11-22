@@ -148,6 +148,6 @@ public class DataStatistics {
 	           "Rain days: " + rainCount + "\n" +
 	           "Snow days: " + snowCount;
 	}
-
+	
 
 }
