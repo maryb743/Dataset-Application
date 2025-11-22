@@ -41,7 +41,6 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 			
 	        public DatasetExplorerGUI() {
 
-	        	//LEFT_ALIGNMENT
 	            panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
 	            frame.add(panel1);
 
@@ -63,13 +62,15 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	            panel1.add(button1);
 	            panel1.add(new JScrollPane(datasetTable));
 	            
+	            //displaying the weather forecast stats
 	            System.out.println("Weather Forecast Statistics:");
+	            //displaying the average temp 
 	            double averageTemp = DataStatistics.calcAverageTemp(tableData);
 	            System.out.println("The average temperature is " + averageTemp);
-	            
+	            //displaying average humidity percentage
 	            double averageHumid = DataStatistics.calcAverageHumid(tableData);
 	            System.out.println("The average humidity percentage is " + averageHumid);
-	            
+	            //displaying the total conditions
 	            String totalConditions = DataStatistics.calcTotalConditions(tableData);
 	            System.out.println(totalConditions);
 
