@@ -14,6 +14,7 @@
 
 package application;
 
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -22,10 +23,13 @@ import javax.swing.table.DefaultTableModel;
 @SuppressWarnings("serial")
 public class DatasetExplorerGUI extends JFrame implements ActionListener{
 		
-			JFrame frame = new JFrame("Dataset table");
-			JPanel panel1 = new JPanel();
-			JButton button1, button2, button3;
-			JTextField t1;
+			JFrame frame = new JFrame("Weather Forecast Dataset");
+			JPanel tablePanel = new JPanel();
+			JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JPanel inputPanel = new JPanel();
+			JLabel label1, label2, label3,label4,label5,label6,label7;
+			JButton addButton, updateButton, deleteButton;
+			JTextField stationID, date, temp, humidity, windKPH, precipMM, Condition;
 			
 			//column array
 			String[] columns= {
@@ -41,26 +45,67 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 			
 	        public DatasetExplorerGUI() {
 
-	            panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
-	            frame.add(panel1);
+	        	//setting 
+	        	tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
+	        	inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+
+	            frame.add(tablePanel);
 
 	            //create the default table model
 	            DefaultTableModel model = new DefaultTableModel(tableData, columns);
 	            JTable datasetTable = new JTable(model);
 
-	            //add row button
-	            button1 = new JButton("Add empty row");
-
+	            //add, update and delete row buttons
+	            addButton = new JButton("Add");
+	            updateButton = new JButton("Update");
+	            deleteButton = new JButton("Delete");
+	            
+	            //labels
+	            label1 = new JLabel("Station ID");
+	            label2 = new JLabel("Date");
+	            label3 = new JLabel("Temp (Celcius)");
+	            label4 = new JLabel("Humidity %");
+	            label5 = new JLabel("Wind (KPH)");
+	            label6 = new JLabel("Precipitation (MM)");
+	            label7 = new JLabel("Condition");
+	            
+	            //text fields for entering data
+	            stationID = new JTextField();
+	            date = new JTextField();
+	            temp = new JTextField();
+	            humidity = new JTextField();
+	            windKPH = new JTextField();
+	            precipMM = new JTextField();
+	            Condition = new JTextField();
+	            
 	            //action listener for add row button
-	            button1.addActionListener(e -> {
+	            addButton.addActionListener(e -> {
 	            	
-	                System.out.println("'Row added");
+	                System.out.println("Row added");
 	                model.addRow(new String[columns.length]);
 	                
 	            });
 
-	            panel1.add(button1);
-	            panel1.add(new JScrollPane(datasetTable));
+	            inputPanel.add(createInputRow("Station ID", stationID));
+	            inputPanel.add(createInputRow("Date", date));
+	            inputPanel.add(createInputRow("Temp (Celsius)", temp));
+	            inputPanel.add(createInputRow("Humidity %", humidity));
+	            inputPanel.add(createInputRow("Wind (KPH)", windKPH));
+	            inputPanel.add(createInputRow("Precipitation (MM)", precipMM));
+	            inputPanel.add(createInputRow("Condition", Condition));
+	            
+	            //button panel
+	            buttonPanel.add(addButton);
+	            buttonPanel.add(updateButton);
+	            buttonPanel.add(deleteButton);
+	           
+	            
+	            //add scroll bar
+	            tablePanel.add(new JScrollPane(datasetTable));
+	            
+	            tablePanel.add(inputPanel);
+	            tablePanel.add(buttonPanel);
+	            
 	            
 	            //displaying the weather forecast stats
 	            System.out.println("Weather Forecast Statistics:");
@@ -85,10 +130,22 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
         SwingUtilities.invokeLater(() -> new DatasetExplorerGUI());
     }
 
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public JPanel createInputRow(String labelText, JTextField field) {
+		
+	    JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	    JLabel label = new JLabel(labelText);
+	    field.setColumns(10);
+	    row.add(label);
+	    row.add(field);
+	    return row;
+	}
+
     
 }
