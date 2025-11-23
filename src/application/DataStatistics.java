@@ -4,9 +4,6 @@
 *  This class is to calculate and display summary statistics about the data in the file, such as number
 *  of rows, averages and totals as relevant to the dataset.
 *  
-*  //average temp and humidity
-*  //total rainy,windy etc days
-*  
 *  Author: Mary Byrne
 *  
 *  2025
@@ -147,6 +144,26 @@ public class DataStatistics {
 	           "Cloudy days: " + cloudyCount + "\n" +
 	           "Rainy days: " + rainCount + "\n" +
 	           "Snowy days: " + snowCount;
+	}
+	
+	//method to calc total of each weather condition
+	public static int calcTotalRows(String[][] data) {
+
+	    int rowCount = 0;
+
+	    //loop through rows
+	    for (String[] row : data) {
+	    	
+	    	//check row isn't null
+	        if (row != null) {
+
+	        	rowCount++;
+	        	
+	        }
+	    }
+
+	    //return total row number
+	    return rowCount;
 	}
 	
 
