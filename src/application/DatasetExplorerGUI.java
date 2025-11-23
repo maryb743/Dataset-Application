@@ -157,11 +157,11 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	                    
 	                    for (int j = 0; j < model.getColumnCount(); j++) {
 	                    	
-	                    	//get value at row i column j, convert value to string and use empty string if area in row is null
-	                        String cellValue = model.getValueAt(i, j);
+	                    	//get value at row i column j, convert value to string and use empty string if area in row is null (error checking)
+	                        String cellValue = model.getValueAt(i, j) != null ? model.getValueAt(i, j).toString().trim() : "";
 	                        
 	                        //compare cell values with values that you want to delete
-	                        if (!cellValue.equals(rowToDelete[j])) {
+	                        if (cellValue.equals(rowToDelete[j])) {
 	                        	
 	                        	//set match to false if values differ
 	                            match = false;
@@ -186,7 +186,7 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 
 	                if (!found) {
 	                	//error, checking if match not found print error
-	                    System.out.println("No matching row found to delete");
+	                    System.out.println("No row found to delete");
 	                    
 	                }
 
