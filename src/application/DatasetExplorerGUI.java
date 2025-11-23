@@ -132,6 +132,75 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 
 	            });
 	            
+	            //action listener for delete row button
+	            deleteButton.addActionListener(e -> {
+
+	                //read values from text fields
+	                String[] rowToDelete = {
+	                    stationID.getText().trim(),
+	                    date.getText().trim(),
+	                    temp.getText().trim(),
+	                    humidity.getText().trim(),
+	                    windKPH.getText().trim(),
+	                    precipMM.getText().trim(),
+	                    Condition.getText().trim()
+	                };
+
+	                //set row found to false
+	                boolean found = false;
+
+	                //nested for loop to go through rows (outer) and columns (inner) in the dataset
+	                for (int i = 0; i < model.getRowCount(); i++) {
+	                	
+	                	//set current row to match values recently entered 
+	                    boolean match = true;
+	                    
+	                    for (int j = 0; j < model.getColumnCount(); j++) {
+	                    	
+	                    	//get value at row i column j, convert value to string and use empty string if area in row is null
+	                        String cellValue = model.getValueAt(i, j);
+	                        
+	                        //compare cell values with values that you want to delete
+	                        if (!cellValue.equals(rowToDelete[j])) {
+	                        	
+	                        	//set match to false if values differ
+	                            match = false;
+	                            break;
+	                            
+	                        }
+	                    }
+	                    
+	                    if (match) {
+	                    	//delete row if values match
+	                        model.removeRow(i); 
+	                        
+	                        System.out.println("Row " + i + " deleted from dataset");
+	                        
+	                        //found match is now true
+	                        found = true;
+	                        
+	                        break; 
+	                        
+	                    }
+	                }
+
+	                if (!found) {
+	                	//error, checking if match not found print error
+	                    System.out.println("No matching row found to delete");
+	                    
+	                }
+
+	                //reset textboxes to blank after data is added
+	                stationID.setText("");
+	                date.setText("");
+	                temp.setText("");
+	                humidity.setText("");
+	                windKPH.setText("");
+	                precipMM.setText("");
+	                Condition.setText("");
+
+	            });
+	            
 	            //actionlistener for showstats button
 	            showStatsButton.addActionListener(f -> {
 
