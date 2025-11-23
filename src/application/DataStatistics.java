@@ -145,8 +145,8 @@ public class DataStatistics {
 	    //return amounts of each condition
 	    return "Sunny days: " + sunnyCount + "\n" +
 	           "Cloudy days: " + cloudyCount + "\n" +
-	           "Rain days: " + rainCount + "\n" +
-	           "Snow days: " + snowCount;
+	           "Rainy days: " + rainCount + "\n" +
+	           "Snowy days: " + snowCount;
 	}
 	
 

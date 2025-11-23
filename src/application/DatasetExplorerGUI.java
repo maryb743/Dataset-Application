@@ -12,7 +12,9 @@
 
 package application;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -25,8 +27,11 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 			JPanel tablePanel = new JPanel();
 			JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JPanel inputPanel = new JPanel();
-			JLabel label1, label2, label3,label4,label5,label6,label7;
-			JButton addButton,deleteButton;
+			JPanel statsPanel = new JPanel();
+			JPanel rowPanel = new JPanel();
+			JLabel label1, label2, label3,label4,label5,label6,label7,displaySun, displayCloud, displayRain, displaySnow;
+			JButton addButton,deleteButton, showStatsButton;
+			ImageIcon sunImage, cloudImage,rainImage,snowImage;
 			JTextField stationID, date, temp, humidity, windKPH, precipMM, Condition;
 			
 			//column array
@@ -43,18 +48,18 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	        	//setting 
 	        	tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
 	        	inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+	        	statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
 
 	            frame.add(tablePanel);
 
 	            //create the default table model
 	            DefaultTableModel model = new DefaultTableModel(tableData, columns);
 	            JTable datasetTable = new JTable(model);
-//	            datasetTable.setBackground(Color.darkGray);
-//	            datasetTable.setForeground(Color.pink);
 
 	            //add, update and delete row buttons
 	            addButton = new JButton("Add");
 	            deleteButton = new JButton("Delete");
+	            showStatsButton = new JButton("Show Forecast Statistics");
 
 	            //text fields for entering data
 	            stationID = new JTextField();
@@ -97,10 +102,12 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	                if (inputEmpty) {
 	                	//if empty add blank row
 	                    model.addRow(new Object[columns.length]);  
+	                    System.out.println("Blank row added to dataset");
 	                    
 	                } else {
 	                	//else add data to table
-	                    model.addRow(newRow);                       
+	                    model.addRow(newRow); 
+	                    System.out.println("New data added to dataset");
 	                }
 
 	                //reset textboxes to blank after data is added
@@ -113,6 +120,70 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	                Condition.setText("");
 
 	            });
+	            
+	            showStatsButton.addActionListener(f -> {
+
+	            	//display user feedback to console
+	                System.out.println("Now displaying Weather Forecast Statistics");
+
+	                //get stats from stats methods in DataStatistics
+	                double averageTemp = DataStatistics.calcAverageTemp(tableData);
+	                double averageHumid = DataStatistics.calcAverageHumid(tableData);
+	                String totalConditions = DataStatistics.calcTotalConditions(tableData);
+
+	                //statslabel to store html of forecast stats
+	                JLabel statsLabel = new JLabel(
+	                		
+	                    "<html>" +
+	                    "<h3>Weather Forecast Statistics</h3>" +
+	                    "Average Temperature: " + averageTemp + " °C<br>" +
+	                    "Average Humidity: " + averageHumid + " %<br>" +
+	                    totalConditions +
+	                    "</html>"
+	                    
+	                );
+
+	                //create display panel
+	                rowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	                
+	                //update background colour
+	                rowPanel.setBackground(Color.WHITE);
+	                
+	                //add stats to panel
+	                rowPanel.add(statsLabel);
+
+	                try {
+	                	//get image in og size
+	                    ImageIcon original = new ImageIcon(getClass().getResource("sunny.png"));
+
+	                    //resize image
+	                    Image scaled = original.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+	                    ImageIcon resizedIcon = new ImageIcon(scaled);
+
+	                    //update size
+	                    displaySun = new JLabel(resizedIcon);
+	                    rowPanel.add(displaySun);
+
+	                    //if condition is sunny display image of sun
+	                    if (totalConditions.contains("Sunny")) {
+	                        rowPanel.add(displaySun);
+	                    }
+
+	                    //if image path incorrect display error
+	                } catch (Exception e) {
+	                    System.out.println("Image not found");
+	                }
+
+
+	                //show window popup
+	                JDialog statsDialog = new JDialog(frame, "Weather Forecast Statistics", true);
+	                statsDialog.add(rowPanel);
+	                statsDialog.setSize(350, 300);
+	                statsDialog.setLocationRelativeTo(frame);
+	                statsDialog.setVisible(true);
+	                
+	            });
+
 
 	            //adding labels and text boxes to panel
 	            inputPanel.add(createInputRow("Station ID", stationID));
@@ -126,6 +197,7 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	            //button panel
 	            buttonPanel.add(addButton);
 	            buttonPanel.add(deleteButton);
+	            buttonPanel.add(showStatsButton);
 	           
 	            
 	            //add scroll bar
@@ -134,19 +206,20 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	            tablePanel.add(inputPanel);
 	            tablePanel.add(buttonPanel);
 	            
-	            
-	            //displaying the weather forecast stats
-	            System.out.println("Weather Forecast Statistics:");
-	            //displaying the average temp 
-	            double averageTemp = DataStatistics.calcAverageTemp(tableData);
-	            System.out.println("The average temperature is " + averageTemp);
-	            //displaying average humidity percentage
-	            double averageHumid = DataStatistics.calcAverageHumid(tableData);
-	            System.out.println("The average humidity percentage is " + averageHumid);
-	            //displaying the total conditions
-	            String totalConditions = DataStatistics.calcTotalConditions(tableData);
-	            System.out.println(totalConditions);
+	            //old stats displaying to console
+//	            //displaying the weather forecast stats
+//	            System.out.println("Weather Forecast Statistics:");
+//	            //displaying the average temp 
+//	            double averageTemp = DataStatistics.calcAverageTemp(tableData);
+//	            System.out.println("The average temperature is " + averageTemp);
+//	            //displaying average humidity percentage
+//	            double averageHumid = DataStatistics.calcAverageHumid(tableData);
+//	            System.out.println("The average humidity percentage is " + averageHumid);
+//	            //displaying the total conditions
+//	            String totalConditions = DataStatistics.calcTotalConditions(tableData);
+//	            System.out.println(totalConditions);
 
+	            //ensure frame closes when x is pressed
 	            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	            frame.pack();
 	            frame.setVisible(true);
