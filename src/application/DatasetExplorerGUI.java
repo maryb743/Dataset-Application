@@ -48,7 +48,7 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 			String[][] tableData = FileProcessor.loadDataset("dataset.txt");
 			
 	        public DatasetExplorerGUI() {
-
+	        	
 	        	//setting 
 	        	tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
 	        	inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
@@ -236,9 +236,6 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	                    }
 	                }
 
-	                //add header panel to top of main panel
-	                textPanel.add(headerPanel, BorderLayout.NORTH);
-
 	                //stats to be displayed using html
 	                statsLabel = new JLabel(
 	                		
@@ -252,6 +249,9 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	                );
 	                //add stats to 
 	                textPanel.add(statsLabel, BorderLayout.WEST);
+	                
+	                //add header panel to top of main panel
+	                textPanel.add(headerPanel, BorderLayout.NORTH);
 
 	                //show window popup
 	                statsDialog = new JDialog(frame, "Weather Forecast Statistics", true);

@@ -93,8 +93,9 @@ public class DataStatistics {
 	    //calc average humidity %
 	    double avg = sum / count;
 
-	    // Round to 1 decimal place
+	    //round to 1 decimal place
 	    BigDecimal result = new BigDecimal(avg);
+	    //set result as rounded number
 	    result = result.setScale(1, RoundingMode.HALF_UP);
 
 	    //return final value (rounded to 1 decimal point)
