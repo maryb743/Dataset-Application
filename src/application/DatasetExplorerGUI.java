@@ -197,10 +197,13 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	                statsDialog.setLocationRelativeTo(frame);
 	                statsDialog.setVisible(true);
 	                
+	                
+	                
 	            });
 	            
 	            //actionlistener for searchBar
-	            searchButton.addActionListener(g -> {
+	            searchButton.addActionListener(g -> result.setModel(DbUtils.resultSetToTableModel(
+	                    new DataBase().search(searchBar.getText(), searchPanel))));{
 
 	            	//display user feedback to console
 	                System.out.println("search bar in use");
@@ -234,6 +237,13 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	            inputPanel.add(createInputRow("Precipitation (MM)", precipMM));
 	            inputPanel.add(createInputRow("Condition", condition));
 	            
+	            //searchPanel
+	        	searchPanel.add(searchButton);
+	    		searchPanel.add(searchBar);
+	    		searchPanel.add(searchScroll);
+	    		add(searchPanel);
+	    		
+	    		
 	            //button panel
 	            buttonPanel.add(addButton);
 	            buttonPanel.add(deleteButton);
