@@ -24,28 +24,32 @@ import javax.swing.table.DefaultTableModel;
 @SuppressWarnings("serial")
 public class DatasetExplorerGUI extends JFrame implements ActionListener{
 		
-			JPanel tablePanel = new JPanel();
-			JPanel buttonPanel = new JPanel();
-			JPanel inputPanel = new JPanel();
-			JPanel statsPanel = new JPanel();
-			JPanel textPanel = new JPanel();
-			JPanel headerPanel = new JPanel();
-			JLabel label1, label2, label3,label4,label5,label6,label7,displaySun, titleLabel, statsLabel;
-			JButton addButton,deleteButton, showStatsButton;
-			ImageIcon sunImage;
-			JTextField stationID, date, temp, humidity, windKPH, precipMM, Condition;
-			JDialog statsDialog = new JDialog();
-			Color headerBlue = new Color (173, 216, 230);
-			Color bodyBlue = new Color (70, 130, 180);
+			private JPanel tablePanel = new JPanel();
+		    private JTextField searchable = new JTextField(30);
+		    private JButton searchB = new JButton("Search");
+		    private JTable result = new JTable();
+		    private JPanel panel = new JPanel();
+		    private JScrollPane scrollPane = new JScrollPane(result);
+			private JPanel buttonPanel = new JPanel();
+			private JPanel inputPanel = new JPanel();
+			private JPanel statsPanel = new JPanel();
+			private JPanel textPanel = new JPanel();
+			private JPanel headerPanel = new JPanel();
+			private JLabel titleLabel, statsLabel;
+			private JButton addButton,deleteButton, showStatsButton;
+			private JTextField stationID, date, temp, humidity, windKPH, precipMM, Condition;
+			private JDialog statsDialog = new JDialog();
+			private Color headerBlue = new Color (173, 216, 230);
+			private Color bodyBlue = new Color (70, 130, 180);
 			
 			//array to store column titles
-			String[] columns= {
+			private String[] columns= {
 					"Station_ID","Date","Temp_C",
 					"Humidity_%","Wind_kph","Precip_mm","Condition"
 					};
 			
 			//loading data from dataset into 2d array
-			String[][] tableData = FileProcessor.loadDataset("dataset.txt");
+			private String[][] tableData = FileProcessor.loadDataset("dataset.txt");
 			
 	        public DatasetExplorerGUI() {
 	        	
