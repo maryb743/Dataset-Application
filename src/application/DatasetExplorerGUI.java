@@ -24,28 +24,33 @@ import javax.swing.table.DefaultTableModel;
 @SuppressWarnings("serial")
 public class DatasetExplorerGUI extends JFrame implements ActionListener{
 		
-			JFrame frame = new JFrame("Weather Forecast Dataset");
-			JPanel tablePanel = new JPanel();
-			JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JPanel inputPanel = new JPanel();
-			JPanel statsPanel = new JPanel();
-			JPanel textPanel, headerPanel = new JPanel();
-			JLabel label1, label2, label3,label4,label5,label6,label7,displaySun, titleLabel, statsLabel;
-			JButton addButton,deleteButton, showStatsButton;
-			ImageIcon sunImage;
-			JTextField stationID, date, temp, humidity, windKPH, precipMM, Condition;
-			JDialog statsDialog = new JDialog();
-			Color headerBlue = new Color (173, 216, 230);
-			Color bodyBlue = new Color (70, 130, 180);
+			private JFrame frame = new JFrame("Weather Forecast Dataset");
+			private JTable searchResult = new JTable();
+			private JPanel tablePanel, inputPanel,statsPanel, searchPanel = new JPanel();
+			private JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			private JPanel textPanel, headerPanel = new JPanel();
+			private JScrollPane searchScroll = new JScrollPane(searchResult);
+			private JLabel titleLabel, statsLabel, iconLabel;
+			private JButton addButton,deleteButton, showStatsButton, searchButton;
+			private JTextField stationID, date, temp, humidity, windKPH, precipMM, condition, searchBar;
+			private JDialog statsDialog = new JDialog();
+			private Color headerBlue = new Color (173, 216, 230);
+			private Color bodyBlue = new Color (70, 130, 180);
 			
 			//array to store column titles
-			String[] columns= {
+			private String[] columns= {
 					"Station_ID","Date","Temp_C",
 					"Humidity_%","Wind_kph","Precip_mm","Condition"
 					};
 			
 			//loading data from dataset into 2d array
-			String[][] tableData = FileProcessor.loadDataset("dataset.txt");
+			private String[][] tableData = FileProcessor.loadDataset("dataset.txt");
+			
+			
+			//main method
+		    public static void main(String[] args) {
+		        SwingUtilities.invokeLater(() -> new DatasetExplorerGUI());
+		    }
 			
 	        public DatasetExplorerGUI() {
 	        	
@@ -78,7 +83,7 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	            humidity = new JTextField();
 	            windKPH = new JTextField();
 	            precipMM = new JTextField();
-	            Condition = new JTextField();
+	            condition = new JTextField();
 	            
 	            //action listener for add row button
 	            addButton.addActionListener(e -> {
@@ -91,7 +96,7 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	                    humidity.getText().trim(),
 	                    windKPH.getText().trim(),
 	                    precipMM.getText().trim(),
-	                    Condition.getText().trim()
+	                    condition.getText().trim()
 	                };
 
 	                //set input as currently empty
@@ -128,7 +133,7 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	                humidity.setText("");
 	                windKPH.setText("");
 	                precipMM.setText("");
-	                Condition.setText("");
+	                condition.setText("");
 
 	            });
 	           
@@ -157,7 +162,7 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	                        //create scaled version of image
 	                        Image scaled = original.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 	                        //replace old icon with scaled one
-	                        JLabel iconLabel = new JLabel(new ImageIcon(scaled));
+	                        iconLabel = new JLabel(new ImageIcon(scaled));
 	                        //add forecast icon to right of header panel
 	                        headerPanel.add(iconLabel, BorderLayout.EAST);
 	                        
@@ -193,6 +198,29 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	                statsDialog.setVisible(true);
 	                
 	            });
+	            
+	            //actionlistener for searchBar
+	            searchButton.addActionListener(g -> {
+
+	            	//display user feedback to console
+	                System.out.println("search bar in use");
+
+	            	setSize(400, 200);
+		    		setResizable(true);
+		    		
+		    		searchPanel.add(searchButton);
+		    		searchPanel.add(searchBar);
+		    		searchPanel.add(searchScroll);
+		    		add(searchPanel);
+		    		
+		    		
+		    		
+		    		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    		setVisible(true);
+		    		
+		    		
+	                
+	            });
 
 	            //add dataset table to main frame
 	            frame.add(tablePanel);
@@ -204,7 +232,7 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	            inputPanel.add(createInputRow("Humidity %", humidity));
 	            inputPanel.add(createInputRow("Wind (KPH)", windKPH));
 	            inputPanel.add(createInputRow("Precipitation (MM)", precipMM));
-	            inputPanel.add(createInputRow("Condition", Condition));
+	            inputPanel.add(createInputRow("Condition", condition));
 	            
 	            //button panel
 	            buttonPanel.add(addButton);
@@ -247,12 +275,16 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener{
 	    	    return row;
 	    	    
 	    	}
-
-	
-	//main method
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new DatasetExplorerGUI());
-    }
+	    	
+//	    	//method for displaying searchBox
+//	    	public void SearchBox() {
+//	    		
+//	    		setSize(400, 200);
+//	    		setResizable(true);
+//	    		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//	    		setVisible(true);
+//	    		
+//	    	}
 
 
 	@Override
