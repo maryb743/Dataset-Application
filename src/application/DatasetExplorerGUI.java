@@ -22,249 +22,353 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
-public class DatasetExplorerGUI extends JFrame implements ActionListener{
-		
-			private JPanel tablePanel = new JPanel();
-		    private JTextField searchable = new JTextField(30);
-		    private JButton searchB = new JButton("Search");
-		    private JTable result = new JTable();
-		    private JPanel panel = new JPanel();
-		    private JScrollPane scrollPane = new JScrollPane(result);
-			private JPanel buttonPanel = new JPanel();
-			private JPanel inputPanel = new JPanel();
-			private JPanel statsPanel = new JPanel();
-			private JPanel textPanel = new JPanel();
-			private JPanel headerPanel = new JPanel();
-			private JLabel titleLabel, statsLabel;
-			private JButton addButton,deleteButton, showStatsButton;
-			private JTextField stationID, date, temp, humidity, windKPH, precipMM, Condition;
-			private JDialog statsDialog = new JDialog();
-			private Color headerBlue = new Color (173, 216, 230);
-			private Color bodyBlue = new Color (70, 130, 180);
-			
-			//array to store column titles
-			private String[] columns= {
-					"Station_ID","Date","Temp_C",
-					"Humidity_%","Wind_kph","Precip_mm","Condition"
-					};
-			
-			//loading data from dataset into 2d array
-			private String[][] tableData = FileProcessor.loadDataset("dataset.txt");
-			
-	        public DatasetExplorerGUI() {
-	        	
-	        	//setting 
-	        	tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
-	        	inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
-	        	statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
-	        	buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+public class DatasetExplorerGUI extends JFrame implements ActionListener {
 
-                //create panel to hold statistics
-                textPanel = new JPanel(new BorderLayout());
-                textPanel.setBackground(bodyBlue);
 
-                //panel for statistics header and icon 
-                headerPanel = new JPanel(new BorderLayout());
-                headerPanel.setBackground(headerBlue);
-                
-	            //create the default table model
-	            DefaultTableModel model = new DefaultTableModel(tableData, columns);
-	            JTable datasetTable = new JTable(model);
+    private JPanel tablePanel = new JPanel();
+    private JTable datasetTable;
+    private DefaultTableModel model;
+    private JTable searchResult = new JTable();
+    private JPanel searchPanel = new JPanel();
+    private JPanel buttonPanel = new JPanel();
+    private JPanel inputPanel = new JPanel();
+    private JPanel statsPanel = new JPanel();
+    private JPanel statsTextPanel = new JPanel();
+    private JPanel statsHeaderPanel = new JPanel();
+    private JLabel titleLabel, statsLabel;
+    private JButton addButton, deleteButton, showStatsButton;
+    private JButton searchButton;
+    private JTextField stationID, date, temp, humidity, windKPH, precipMM, Condition;
+    private JTextField searchBar = new JTextField(20);
+    private JScrollPane searchScroll = new JScrollPane();
+    private JDialog statsDialog = new JDialog();
+    private JDialog searchDialog = new JDialog();
+    private Color headerBlue = new Color(173, 216, 230);
+    private Color bodyBlue = new Color(70, 130, 180);
 
-	            //add, update and delete row buttons
-	            addButton = new JButton("Add");
-	            deleteButton = new JButton("Delete");
-	            showStatsButton = new JButton("Show Forecast Statistics");
+    //array to store column titles
+    private String[] columns = {
+        "Station_ID", "Date", "Temp_C",
+        "Humidity_%", "Wind_kph", "Precip_mm", "Condition"
+    };
 
-	            //text fields for entering data
-	            stationID = new JTextField();
-	            date = new JTextField();
-	            temp = new JTextField();
-	            humidity = new JTextField();
-	            windKPH = new JTextField();
-	            precipMM = new JTextField();
-	            Condition = new JTextField();
-	            
-	            //action listener for add row button
-	            addButton.addActionListener(e -> {
+    //loading data from dataset in FileProcessor into 2d array
+    private String[][] tableData = FileProcessor.loadDataset("dataset.txt");
 
-	                //read values from text fields
-	                String[] newRow = {
-	                    stationID.getText().trim(),
-	                    date.getText().trim(),
-	                    temp.getText().trim(),
-	                    humidity.getText().trim(),
-	                    windKPH.getText().trim(),
-	                    precipMM.getText().trim(),
-	                    Condition.getText().trim()
-	                };
+    //GUI constructor
+    public DatasetExplorerGUI() {
 
-	                //set input as currently empty
-	                boolean inputEmpty = true;
-	               
-	                for (String s : newRow) {
-	                	
-	                	//if no text is entered set the row as containing data
-	                    if (!s.isEmpty()) {
-	                    	
-	                    	inputEmpty = false;
-	                        break;
-	                        
-	                    }
-	                    
-	                }
+    	//layout setup for panels
+        tablePanel.setLayout(new BoxLayout(tablePanel, BoxLayout.Y_AXIS));
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+        statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        searchPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        statsTextPanel.setLayout(new BorderLayout());
+        statsHeaderPanel.setLayout(new BorderLayout());
+        
+        //setting background colours
+        statsTextPanel.setBackground(bodyBlue);
+        statsHeaderPanel.setBackground(headerBlue);
 
-	               
-	                if (inputEmpty) {
-	                	//if empty add blank row
-	                    model.addRow(new Object[columns.length]);  
-	                    System.out.println("Blank row added to dataset");
-	                    
-	                } else {
-	                	//else add data to table
-	                	model.addRow(newRow); 
-	                    System.out.println("New data added to dataset");
-	                }
+        //creating main dataset table and table model
+        model = new DefaultTableModel(tableData, columns);
+        datasetTable = new JTable(model);
 
-	                //reset textboxes to blank after data is added
-	                stationID.setText("");
-	                date.setText("");
-	                temp.setText("");
-	                humidity.setText("");
-	                windKPH.setText("");
-	                precipMM.setText("");
-	                Condition.setText("");
+        //buttons
+        addButton = new JButton("Add");
+        deleteButton = new JButton("Delete");
+        showStatsButton = new JButton("Show Forecast Statistics");
+        searchButton = new JButton("Search");
 
-	            });
-	           
-	            
-	            //actionlistener for showstats button
-	            showStatsButton.addActionListener(f -> {
+        //text boxes for adding new rows
+        stationID = new JTextField();
+        date = new JTextField();
+        temp = new JTextField();
+        humidity = new JTextField();
+        windKPH = new JTextField();
+        precipMM = new JTextField();
+        Condition = new JTextField();
 
-	            	//display user feedback to console
-	                System.out.println("Now displaying Weather Forecast Statistics");
+        //giving all buttons actionListeners
+        addButton.addActionListener(this);
+        deleteButton.addActionListener(this);
+        showStatsButton.addActionListener(this);
+        searchButton.addActionListener(this);
 
-	                //get stats from stats methods in DataStatistics
-	                double averageTemp = DataStatistics.calcAverageTemp(tableData);
-	                double averageHumid = DataStatistics.calcAverageHumid(tableData);
-	                int totalRows = DataStatistics.calcTotalRows(tableData);
-	                String totalConditions = DataStatistics.calcTotalConditions(tableData);
+        //add main table into frame
+        add(tablePanel);
 
-	                //add title to header panel
-	                titleLabel = new JLabel("<html><h3>Weather Forecast Statistics</h3></html>");
-	                headerPanel.add(titleLabel, BorderLayout.WEST);
+        //input rows for adding data
+        inputPanel.add(createInputRow("Station ID", stationID));
+        inputPanel.add(createInputRow("Date", date));
+        inputPanel.add(createInputRow("Temp (Celsius)", temp));
+        inputPanel.add(createInputRow("Humidity %", humidity));
+        inputPanel.add(createInputRow("Wind (KPH)", windKPH));
+        inputPanel.add(createInputRow("Precipitation (MM)", precipMM));
+        inputPanel.add(createInputRow("Condition", Condition));
+        
+        //add buttons to button panel
+        buttonPanel.add(addButton);
+        buttonPanel.add(deleteButton);
+        buttonPanel.add(showStatsButton);
 
-	                //add forecast icon
-	                if (totalConditions.contains("Sunny")) {
-	                    try {
-	                    	//get og icon size
-	                        ImageIcon original = new ImageIcon(getClass().getResource("forecast.png"));
-	                        //create scaled version of image
-	                        Image scaled = original.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-	                        //replace old icon with scaled one
-	                        JLabel iconLabel = new JLabel(new ImageIcon(scaled));
-	                        //add forecast icon to right of header panel
-	                        headerPanel.add(iconLabel, BorderLayout.EAST);
-	                        
-	                    } catch (Exception e) {
-	                    	//if image path is incorrect print error
-	                        System.out.println("Image not found");
-	                        
-	                    }
-	                }
+        //add search componants to search panel
+        searchPanel.add(searchBar);
+        searchPanel.add(searchButton);
 
-	                //stats to be displayed using html
-	                statsLabel = new JLabel(
-	                		
-	                    "<html>" + 
-	                        "Average Temperature: " + averageTemp + " °C<br>" +
-	                        "Average Humidity: " + averageHumid + " %<br>" +
-	                        totalConditions + "<br>" +
-	                        "Total forecasts: " + totalRows +
-	                    "</html>"
-	                        
-	                );
-	                //add stats to 
-	                textPanel.add(statsLabel, BorderLayout.WEST);
-	                
-	                //add header panel to top of main panel
-	                textPanel.add(headerPanel, BorderLayout.NORTH);
+        //add all componants to main panel
+        tablePanel.add(new JScrollPane(datasetTable));
+        tablePanel.add(inputPanel);
+        tablePanel.add(buttonPanel);
+        tablePanel.add(searchPanel);
 
-	                //show window popup
-	                statsDialog.add(textPanel);
-	                statsDialog.setSize(400, 200);
-	                statsDialog.setLocationRelativeTo(tablePanel);
-	                statsDialog.setVisible(true);
-	                
-	            });
+        //ensure window closes when x is pressed, componants fit and is visible
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pack();
+        setVisible(true);
+        
+    }
 
-	            //add dataset table to main frame
-	            add(tablePanel);
-	            
-	            //adding labels and text boxes to panel using createInputRow method
-	            inputPanel.add(createInputRow("Station ID", stationID));
-	            inputPanel.add(createInputRow("Date", date));
-	            inputPanel.add(createInputRow("Temp (Celsius)", temp));
-	            inputPanel.add(createInputRow("Humidity %", humidity));
-	            inputPanel.add(createInputRow("Wind (KPH)", windKPH));
-	            inputPanel.add(createInputRow("Precipitation (MM)", precipMM));
-	            inputPanel.add(createInputRow("Condition", Condition));
-	            
-	            //button panel
-	            buttonPanel.add(addButton);
-	            buttonPanel.add(deleteButton);
-	            buttonPanel.add(showStatsButton);
-	           
-	            //add scroll bar
-	            tablePanel.add(new JScrollPane(datasetTable));
-	            
-	            tablePanel.add(inputPanel);
-	            tablePanel.add(buttonPanel);
-	            
-	            //old stats displaying to console
-//	            //displaying the weather forecast stats
-//	            System.out.println("Weather Forecast Statistics:");
-//	            //displaying the average temp 
-//	            double averageTemp = DataStatistics.calcAverageTemp(tableData);
-//	            System.out.println("The average temperature is " + averageTemp);
-//	            //displaying average humidity percentage
-//	            double averageHumid = DataStatistics.calcAverageHumid(tableData);
-//	            System.out.println("The average humidity percentage is " + averageHumid);
-//	            //displaying the total conditions
-//	            String totalConditions = DataStatistics.calcTotalConditions(tableData);
-//	            System.out.println(totalConditions);
+    //method to make the labelled input fields for adding data
+    public JPanel createInputRow(String labelText, JTextField field) {
+    	
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel label = new JLabel(labelText);
+        field.setColumns(10);
+        row.add(label);
+        row.add(field);
+        return row;
+        
+    }
 
-	            //ensure frame closes when x is pressed
-	            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	            pack();
-	            setVisible(true);
-	        }
-	        
-	    	//panel to display labels and text fields for the user to use to add data
-	    	public JPanel createInputRow(String labelText, JTextField field) {
-	    		
-	    	    JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
-	    	    JLabel label = new JLabel(labelText);
-	    	    field.setColumns(10);
-	    	    row.add(label);
-	    	    row.add(field);
-	    	    return row;
-	    	    
-	    	}
-
-	
-	//main method
+    //main method
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new DatasetExplorerGUI());
     }
 
+    //event handling
+    @Override
+    public void actionPerformed(ActionEvent e) {
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+    	//object to identify which button gets pressed
+        Object src = e.getSource();
 
-    
+        //if add is pressed add row to dataset
+        if (src == addButton) {
+        	
+            addRow();
+        //if delete is pressed delete row from dataset
+        } else if (src == deleteButton) {
+        	
+            deleteRow();
+        //if show stats is pressed show forecast statistics    
+        } else if (src == showStatsButton) {
+        	
+            showStats();
+        //is search button is pressed search for input then display results panel    
+        } else if (src == searchButton) {
+            System.out.println("Search bar in use");
+            search();
+            
+        }
+    }
+
+    //method to add a row to dataset
+    private void addRow() {
+
+    	//get input from text boxes
+        String[] newRow = {
+            stationID.getText().trim(),
+            date.getText().trim(),
+            temp.getText().trim(),
+            humidity.getText().trim(),
+            windKPH.getText().trim(),
+            precipMM.getText().trim(),
+            Condition.getText().trim()
+        };
+
+        //check if text boxes are empty
+        boolean empty = true;
+        
+        for (String textBox : newRow) {
+        	//if not empty set empty to false
+            if (!textBox.isEmpty()) {
+            	empty = false;
+            	
+                break;
+                
+            }
+            
+        }
+
+        //if text boxes are empty add blank row
+        if (empty) {
+        	
+            model.addRow(new Object[columns.length]);
+            System.out.println("Blank row added to dataset");
+            
+        } 
+        //if not empty add data to dataset
+        else {
+            model.addRow(newRow);
+            System.out.println("New data added to dataset");
+        }
+
+        //update/clear text boxes after row is added
+        stationID.setText("");
+        date.setText("");
+        temp.setText("");
+        humidity.setText("");
+        windKPH.setText("");
+        precipMM.setText("");
+        Condition.setText("");
+        
+    }
+
+  //method to delete a row to dataset
+    private void deleteRow() {
+    	
+    	//sets row to selected row / 1 (-1 if not selected)
+        int row = datasetTable.getSelectedRow();
+        
+        //if row is greated than 0 (row selected) remove row
+        if (row >= 0) {
+        	
+            model.removeRow(row);
+            System.out.println("Row deleted");
+            
+        } 
+        
+        //else print user feedback
+        else 
+        {
+            System.out.println("No row selected to delete.");
+        }
+        
+    }
+
+  //method to show forecast statistics panel
+    private void showStats() {
+    	
+
+        System.out.println("Now displaying Weather Forecast Statistics");
+
+        //get data from DataStats class
+        double averageTemp = DataStatistics.calcAverageTemp(tableData);
+        double averageHumid = DataStatistics.calcAverageHumid(tableData);
+        int totalRows = DataStatistics.calcTotalRows(tableData);
+        String totalConditions = DataStatistics.calcTotalConditions(tableData);
+
+        //use html to display title
+        titleLabel = new JLabel("<html><h3>Weather Forecast Statistics</h3></html>");
+        
+        //add title and layout setup to header
+        statsHeaderPanel.add(titleLabel, BorderLayout.WEST);
+
+        //if condiitons not empty show forecast image
+        if (totalConditions != null) {
+        	
+            try {
+            	
+            	//get og image
+                ImageIcon original = new ImageIcon(getClass().getResource("forecast.png"));
+                //scale down to 50 x 50 pixels
+                Image scaled = original.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                //get resized image
+                JLabel iconLabel = new JLabel(new ImageIcon(scaled));
+                //add tto header panel
+                statsHeaderPanel.add(iconLabel, BorderLayout.EAST);
+                
+             //error checking
+            } catch (Exception ex) {
+            	
+            	//print user feeback
+                System.out.println("Image not found");
+                
+            }
+            
+        }
+
+        //using html to format statistics
+        statsLabel = new JLabel(
+            "<html>" +
+        
+            "Average Temperature: " + averageTemp + " °C<br>" +
+            
+            "Average Humidity: " + averageHumid + " %<br>" +
+            
+            totalConditions + "<br>" +
+            
+            "Total forecasts: " + totalRows +
+            "</html>"
+        );
+
+        //add text to text panel 
+        statsTextPanel.add(statsLabel, BorderLayout.WEST);
+        //add the header above text
+        statsTextPanel.add(statsHeaderPanel, BorderLayout.NORTH);
+
+        //add text panel to pop up window
+        statsDialog.add(statsTextPanel);
+        //set layout of popup window
+        statsDialog.setSize(400, 200);
+        statsDialog.setLocationRelativeTo(tablePanel);
+        //set as visable
+        statsDialog.setVisible(true);
+        
+        
+        
+        
+    }
+
+  //method to searcg dataset for user input entered
+    private void search() {
+
+    	//get user input from search box
+        String userInput = searchBar.getText();
+        
+        //new model to hold results
+        DefaultTableModel newModel = new DefaultTableModel(columns, 0);
+
+        //loop through dataset
+        for (String[] row : tableData) {
+        	//set data match to false
+            boolean inputMatches = false;
+
+            //check each piece of data if it matches the user input
+            for (String data : row) {
+            	
+                if (data != null && data.contains(userInput)) {
+                	//input matches the data set to true
+                	inputMatches = true;
+                	
+                    break;
+                    
+                }
+                
+            }
+
+            //if match to input is found add row to results table
+            if (inputMatches) {
+            	
+                newModel.addRow(row);
+                
+            }
+        }
+
+        //display resuts table in new model
+        searchResult.setModel(newModel);
+        searchDialog = new JDialog(this, "Search Results found: ");
+        //add scroll wheel to results panel
+        searchScroll = new JScrollPane(searchResult);
+        //set results dialog layout
+        searchDialog.setSize(400, 300);
+        searchDialog.add(searchScroll);
+        searchDialog.setLocationRelativeTo(this);
+        searchDialog.setVisible(true);
+        
+        
+    }
 }
+
