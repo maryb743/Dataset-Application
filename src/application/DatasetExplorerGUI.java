@@ -1,11 +1,11 @@
 /**************************************************
  * 
  * 
- * This class is to create and display a GUI containing a dataset and functional buttons
+ * This class is to create and display a GUI containing a dataset and functional buttons.
  * 
  * Author: Mary Byrne
  * 
- * 2025
+ * 3-12-2025
  * 
  * 
  ************************************************************************************/

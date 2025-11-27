@@ -2,11 +2,11 @@
  * 
  * 
  * This class provides file reading and writing functionality, 
- * Reads the dataset text file and returns its contents as a 2D String array
+ * Reads the dataset text file and returns its contents as a 2D String array.
  * 
  * Author: Mary Byrne
  * 
- * 2025
+ * 3-12-2025
  * 
  * 
  ************************************************************************************/
