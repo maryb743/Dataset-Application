@@ -142,7 +142,7 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener {
         
     }
 
-    //main method
+    //main method to run as java app
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new DatasetExplorerGUI());
     }
@@ -154,24 +154,37 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener {
     	//object to identify which button gets pressed
         Object src = e.getSource();
 
-        //if add is pressed add row to dataset
         if (src == addButton) {
-        	
+        	//if add is pressed add row to dataset
             addRow();
-        //if delete is pressed delete row from dataset
-        } else if (src == deleteButton) {
-        	
-            deleteRow();
-        //if show stats is pressed show forecast statistics    
-        } else if (src == showStatsButton) {
-        	
+        
+        } 
+        
+        else if (src == deleteButton) {
+        	//if delete is pressed delete row from dataset
+            deleteRow();   
+        }
+        
+        else if (src == showStatsButton) {
+        	//if show stats is pressed show forecast statistics
             showStats();
-        //is search button is pressed search for input then display results panel    
-        } else if (src == searchButton) {
-            System.out.println("Search bar in use");
+           
+        } 
+        
+        else if (src == searchButton) {
+            System.out.println("Searching for item");
+          //is search button is pressed search for input then display results panel 
             search();
             
         }
+        
+        else if(src == searchBar) {
+        	//if searchBar pressed 
+        	System.out.println("Search bar in use");
+        	
+        }
+        
+        
     }
 
     //method to add a row to dataset
@@ -254,11 +267,17 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener {
 
         System.out.println("Now displaying Weather Forecast Statistics");
 
-        //get data from DataStats class
-        double averageTemp = DataStatistics.calcAverageTemp(tableData);
-        double averageHumid = DataStatistics.calcAverageHumid(tableData);
-        int totalRows = DataStatistics.calcTotalRows(tableData);
-        String totalConditions = DataStatistics.calcTotalConditions(tableData);
+        //create stats object
+        DataStatistics stats = new DataStatistics();
+
+        //calc + store stats using setters
+        stats.calcStats(tableData);
+
+        //get values from getters
+        double averageTemp = stats.getAverageTemp();
+        double averageHumid = stats.getAverageHumid();
+        int totalRows = stats.getTotalRows();
+        String totalConditions = stats.getTotalConditions();
 
         //use html to display title
         titleLabel = new JLabel("<html><h3>Weather Forecast Statistics</h3></html>");

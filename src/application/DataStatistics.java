@@ -18,6 +18,11 @@ import java.math.RoundingMode;
 
 public class DataStatistics {
 	
+	private double averageTemp;
+	private double averageHumid;
+	private String totalConditions;
+	private int totalRows;
+	
 	//method to calc average temperatures 
 	public static double calcAverageTemp(String[][] data) {
 		
@@ -165,6 +170,52 @@ public class DataStatistics {
 
 	    //return total row number
 	    return rowCount;
+	}
+	
+	//method to caluclate and store everything 
+	public void calcStats(String[][] data) {
+
+	    this.averageTemp = calcAverageTemp(data);
+	    
+	    this.averageHumid = calcAverageHumid(data);
+	    
+	    this.totalRows = calcTotalRows(data);
+	    
+	    this.totalConditions = calcTotalConditions(data);
+	    
+	}
+
+
+	public double getAverageTemp() {
+		return averageTemp;
+	}
+
+	public void setAverageTemp(double averageTemp) {
+		this.averageTemp = averageTemp;
+	}
+
+	public double getAverageHumid() {
+		return averageHumid;
+	}
+
+	public void setAverageHumid(double averageHumid) {
+		this.averageHumid = averageHumid;
+	}
+
+	public String getTotalConditions() {
+		return totalConditions;
+	}
+
+	public void setTotalConditions(String totalConditions) {
+		this.totalConditions = totalConditions;
+	}
+
+	public int getTotalRows() {
+		return totalRows;
+	}
+
+	public void setTotalRows(int totalRows) {
+		this.totalRows = totalRows;
 	}
 	
 
