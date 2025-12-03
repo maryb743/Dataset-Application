@@ -37,7 +37,8 @@ public class DataStatistics {
 	    for (String[] row : data) {
 
 	    	//check column (containing temps) exists and isn't empty
-	        if (row.length > tempCol && row[tempCol] != null && !row[tempCol].isEmpty()) {
+	        if (row.length > tempCol) {
+	        	
 	            try {
 	            	//convert temps from txt file from string to double
 	                double temp = Double.parseDouble(row[tempCol]);
@@ -52,18 +53,15 @@ public class DataStatistics {
 	        }
 	    }
 
-	    //error checking if count = 0 don't complete equation
-	    if (count == 0) return 0;
-
 	    //calc average
 	    double avg = sum / count;
 
 	    //round to 1 decimal point
-	    BigDecimal rounded = new BigDecimal(avg);
-	    rounded = rounded.setScale(1, RoundingMode.HALF_UP);
+	    BigDecimal result = new BigDecimal(avg);
+	    result = result.setScale(1, RoundingMode.HALF_UP);
 
 	    //return final value (rounded to 1 decimal point)
-	    return rounded.doubleValue();
+	    return result.doubleValue();
 	}
 
 	//method to calc average humidity percentage 
@@ -79,7 +77,7 @@ public class DataStatistics {
 	    for (String[] row : data) {
 
 	    	//check column (containing humidity %) exists and isn't empty
-	        if (row.length > humidityCol && row[humidityCol] != null && !row[humidityCol].isEmpty()) {
+	        if (row.length > humidityCol) {
 
 	            try {
 	            	//convert humidity % from txt file from string to double
@@ -92,10 +90,7 @@ public class DataStatistics {
 	            }
 	        }
 	    }
-
-	    //error checking if count = 0 don't complete equation
-	    if (count == 0) return 0;
-
+	    
 	    //calc average humidity %
 	    double avg = sum / count;
 
@@ -123,7 +118,7 @@ public class DataStatistics {
 	    for (String[] row : data) {
 	    	
 	    	//check the Conditions column exists/error checking
-	        if (row.length > conditionCol && row[conditionCol] != null) {
+	        if (row.length > conditionCol) {
 
 	        	//remove any leading/trailing spaces
 	            String condition = row[conditionCol].trim();
@@ -156,7 +151,7 @@ public class DataStatistics {
 	//method to calc total of each weather condition
 	public static int calcTotalRows(String[][] data) {
 
-	    int rowCount = 0;
+	    int rowCount = -1;
 
 	    //loop through rows
 	    for (String[] row : data) {
