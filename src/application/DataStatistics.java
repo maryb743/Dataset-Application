@@ -186,35 +186,43 @@ public class DataStatistics {
 	    
 	}
 
-
+	//getters and setters
+	//averageTemp getter
 	public double getAverageTemp() {
 		return averageTemp;
 	}
 
+	//averageTemp setter
 	public void setAverageTemp(double averageTemp) {
 		this.averageTemp = averageTemp;
 	}
 
+	//averageHumid getter
 	public double getAverageHumid() {
 		return averageHumid;
 	}
 
+	//averageHumid setter
 	public void setAverageHumid(double averageHumid) {
 		this.averageHumid = averageHumid;
 	}
 
+	//totalConditions getter
 	public String getTotalConditions() {
 		return totalConditions;
 	}
-
+	
+	//totalCondition setter
 	public void setTotalConditions(String totalConditions) {
 		this.totalConditions = totalConditions;
 	}
 
+	//totalRows getter
 	public int getTotalRows() {
 		return totalRows;
 	}
 
+	//totalRows setter
 	public void setTotalRows(int totalRows) {
 		this.totalRows = totalRows;
 	}
