@@ -239,7 +239,7 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener {
         
     }
 
-  //method to delete a row to dataset
+    //method to delete a row to dataset
     private void deleteRow() {
     	
     	//sets row to selected row / 1 (-1 if not selected)
@@ -256,12 +256,12 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener {
         //else print user feedback
         else 
         {
-            System.out.println("No row selected to delete.");
+            System.out.println("No row selected to delete");
         }
         
     }
 
-  //method to show forecast statistics panel
+    //method to show forecast statistics panel
     private void showStats() {
     	
 
@@ -341,7 +341,7 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener {
         
     }
 
-  //method to searcg dataset for user input entered
+    //method to searcg dataset for user input entered
     private void search() {
 
     	//get user input from search box

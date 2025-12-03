@@ -18,6 +18,7 @@ import java.math.RoundingMode;
 
 public class DataStatistics {
 	
+	//statistics variables
 	private double averageTemp;
 	private double averageHumid;
 	private String totalConditions;
@@ -121,14 +122,14 @@ public class DataStatistics {
 	    //loop through rows
 	    for (String[] row : data) {
 	    	
-	    	//check the Conditions column exists
+	    	//check the Conditions column exists/error checking
 	        if (row.length > conditionCol && row[conditionCol] != null) {
 
 	        	//remove any leading/trailing spaces
-	            String cond = row[conditionCol].trim();
+	            String condition = row[conditionCol].trim();
 
 	            //switch statement to increment counts
-	            switch (cond) {
+	            switch (condition) {
 	                case "Sunny":
 	                    sunnyCount++;
 	                    break;
