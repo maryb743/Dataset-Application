@@ -23,12 +23,12 @@ public class FileProcessor {
 		//temp array list to hold row data
 	    ArrayList<String[]> rows = new ArrayList<>();
 	    
-	    try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+	    try (BufferedReader fileReader = new BufferedReader(new FileReader(filename))) {
 	        String line;
 	        boolean isFirstLine = true;
 
 	        //read in file line by line
-	        while ((line = br.readLine()) != null) {
+	        while ((line = fileReader.readLine()) != null) {
 
 	        	//remove whitespace
 	            line = line.trim();
@@ -45,11 +45,11 @@ public class FileProcessor {
 	            }
 
 	            //split line into columns
-	            String[] fields = line.split("\\s+");
+	            String[] columns = line.split("\\s+");
 
 	            //make sure only rows that have 7 columns are added
-	            if (fields.length == 7) {
-	                rows.add(fields);
+	            if (columns.length == 7) {
+	                rows.add(columns);
 	                
 	            } else {
 	            	

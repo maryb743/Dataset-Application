@@ -366,6 +366,12 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener {
                     
                 }
                 
+                else if(searchBar ==  null) {
+                	
+                	System.out.println("Enter something to search");
+                	
+                }
+                
             }
 
             //if match to input is found add row to results table
@@ -374,6 +380,8 @@ public class DatasetExplorerGUI extends JFrame implements ActionListener {
                 newModel.addRow(row);
                 
             }
+            
+           
         }
 
         //display resuts table in new model
