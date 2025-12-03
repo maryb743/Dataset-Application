@@ -186,7 +186,7 @@ public class DataStatistics {
 	    
 	}
 
-	//getters and setters
+	//getters & setters
 	//averageTemp getter
 	public double getAverageTemp() {
 		return averageTemp;
